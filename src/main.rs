@@ -1,25 +1,45 @@
+use std::io::Write;
+
 use crate::game_board::*;
 
 pub mod game_board;
 
 fn main() {
     let mut game_board = GameBoard::new();
-    game_board.put_symbol(Symbol::X, (0, 0));
-    game_board.put_symbol(Symbol::X, (0, 1));
-    game_board.put_symbol(Symbol::O, (0, 2));
-    game_board.put_symbol(Symbol::O, (1, 0));
-    game_board.put_symbol(Symbol::X, (1, 1));
-    game_board.put_symbol(Symbol::X, (1, 2));
-    game_board.put_symbol(Symbol::X, (2, 0));
-    game_board.put_symbol(Symbol::O, (2, 1));
-    game_board.put_symbol(Symbol::O, (2, 2));
-    println!("{game_board}");
+    let mut gaming = true;
+    let mut turn = Symbol::X;
+    while gaming {
+        println!("{game_board}");
+        let mut line = String::new();
 
-    let winner = check_win(&game_board);
-    match winner {
-        Option::None => println!("No winner!"),
-        Option::Some(symbol) => println!("{symbol} wins!"),
-    };
+        print!("Row: ");
+        let _ = std::io::stdout().flush();
+        std::io::stdin().read_line(&mut line).unwrap();
+        let row = line.trim().parse::<usize>().unwrap() - 1;
+        line.clear();
+
+        print!("Column: ");
+        let _ = std::io::stdout().flush();
+        std::io::stdin().read_line(&mut line).unwrap();
+        let column = line.trim().parse::<usize>().unwrap() - 1;
+        line.clear();
+
+        game_board.put_symbol(turn, (row, column));
+
+        let winner = check_win(&game_board);
+        match winner {
+            Option::None => (),
+            Option::Some(symbol) => {
+                println!("{symbol} wins!");
+                gaming = false;
+            }
+        };
+
+        turn = match turn {
+            Symbol::X => Symbol::O,
+            Symbol::O => Symbol::X,
+        }
+    }
 }
 
 fn check_win(game_board: &GameBoard) -> Option<Symbol> {
