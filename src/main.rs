@@ -35,11 +35,19 @@ fn main() {
             }
         };
 
+        let full = check_full(&game_board);
+        if full {
+            println!("No winner!");
+            gaming = false;
+        }
+
         turn = match turn {
             Symbol::X => Symbol::O,
             Symbol::O => Symbol::X,
         }
     }
+
+    println!("{game_board}")
 }
 
 fn check_win(game_board: &GameBoard) -> Option<Symbol> {
@@ -74,6 +82,19 @@ fn check_run(run: &[Tile; 3], symbol: &Symbol) -> bool {
                 if sym != symbol {
                     return false;
                 }
+            }
+        }
+    }
+
+    true
+}
+
+fn check_full(game_board: &GameBoard) -> bool {
+    for row in game_board.get_tiles() {
+        for tile in row {
+            match tile {
+                Option::None => return false,
+                Option::Some(_) => (),
             }
         }
     }
