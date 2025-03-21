@@ -1,10 +1,12 @@
 use std::fmt;
 
-enum Option<T> {
+#[derive(Clone, Copy)]
+pub enum Option<T> {
     None,
     Some(T),
 }
 
+#[derive(Clone, Copy, PartialEq)]
 pub enum Symbol {
     X,
     O,
@@ -20,7 +22,7 @@ impl fmt::Display for Symbol {
     }
 }
 
-type Tile = Option<Symbol>;
+pub type Tile = Option<Symbol>;
 
 impl fmt::Display for Tile {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -32,26 +34,26 @@ impl fmt::Display for Tile {
     }
 }
 
-type Point = (usize, usize);
+pub type Point = (usize, usize);
 
 pub struct GameBoard {
-    rows: [[Tile; 3]; 3],
+    tiles: [[Tile; 3]; 3],
 }
 
 impl fmt::Display for GameBoard {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let rows = &self.rows;
+        let tiles = &self.tiles;
         let repr = format!(
             "{}|{}|{}\n-----\n{}|{}|{}\n-----\n{}|{}|{}",
-            rows[0][0],
-            rows[0][1],
-            rows[0][2],
-            rows[1][0],
-            rows[1][1],
-            rows[1][2],
-            rows[2][0],
-            rows[2][1],
-            rows[2][2],
+            tiles[0][0],
+            tiles[0][1],
+            tiles[0][2],
+            tiles[1][0],
+            tiles[1][1],
+            tiles[1][2],
+            tiles[2][0],
+            tiles[2][1],
+            tiles[2][2],
         );
         write!(f, "{repr}",)
     }
@@ -59,15 +61,19 @@ impl fmt::Display for GameBoard {
 
 impl GameBoard {
     pub fn new() -> GameBoard {
-        let rows = [
+        let tiles = [
             [Option::None, Option::None, Option::None],
             [Option::None, Option::None, Option::None],
             [Option::None, Option::None, Option::None],
         ];
-        GameBoard { rows }
+        GameBoard { tiles }
+    }
+
+    pub fn get_tiles(&self) -> &[[Tile; 3]; 3] {
+        &self.tiles
     }
 
     pub fn put_symbol(&mut self, symbol: Symbol, point: Point) {
-        self.rows[point.0][point.1] = Option::Some(symbol);
+        self.tiles[point.0][point.1] = Option::Some(symbol);
     }
 }
