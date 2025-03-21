@@ -74,6 +74,9 @@ impl GameBoard {
     }
 
     pub fn put_symbol(&mut self, symbol: Symbol, point: Point) {
-        self.tiles[point.0][point.1] = Option::Some(symbol);
+        match self.tiles[point.0][point.1] {
+            Option::None => self.tiles[point.0][point.1] = Option::Some(symbol),
+            Option::Some(_) => (),
+        };
     }
 }
