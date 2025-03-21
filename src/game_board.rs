@@ -49,7 +49,7 @@ pub struct GameBoard {
     rows: [Row; 3],
 }
 
-impl<'a> fmt::Display for GameBoard {
+impl fmt::Display for GameBoard {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let rows = &self.rows;
         let repr = format!(
